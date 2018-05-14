@@ -200,7 +200,7 @@ web3sdk编译依赖软件如下：
 | jdk    | jdk 1.8以上    |
 | gradle | gradle 4.6以上 |
 
-为了方便用户，sig-service-client在sig_client文件夹下配备了自动化编译脚本compile.sh（针对**centos/ubuntu**运行环境，windows环境下也可用gradle编译），参考[compile.sh脚本](#sig_client/compile.sh)
+为了方便用户，sig-service-client在sig_client文件夹下配备了自动化编译脚本compile.sh（针对**centos/ubuntu**运行环境，windows环境下也可用gradle编译），参考[compile.sh脚本](sig_client/compile.sh)
 
 用户通过运行该脚本编译客户端：
 
