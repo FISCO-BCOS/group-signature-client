@@ -257,7 +257,7 @@ build.gradle  compile.sh  lib  src
 **create_group ${rpc_config_path} ${group_name} ${gm_pass} ${pbc_param}**
 
 
-| 功能   |生成群，群主可调用该接口生成群                          |
+| 功能   |<div align = left>生成群，群主可调用该接口生成群</div>                          |
 | ---- | ---------------------------------------- |
 | 参数   | ① rpc_config_path：required, 设置客户端连接的rpc服务器配置信息(具体配置参考conn.json), ip默认值是127.0.0.1， port默认值是8003，thread_num默认值是50;<br>② group_name： required, 生成的群名字;<br> ③ gm_pass: required, 群主访问rpc服务的密码（目前实现版本中没有对gm_pass做校验，使用者可修改rpc服务sig-service添加相关校验<br> ④ pbc_param: optional, 用指定的线性对创建群，默认使用A类型线性对（不同类型线性对安全性不同，目前A类型线性对已经不太安全），针对不同类型线性对，下面给出pbc_param具体示例:<br> A类型线性对: '{\"linear_type\":\"a\", \"q_bits_len\": 256, \"r_bits_len\":256}'<br> A1类型线性对: '{\"linear_type\":\"a_one\", \"order\":512}'<br> E类型线性对: '{\"linear_type\":\"e\", \"q_bits_len\": 512, \"r_bits_len\":512}'<br> F类型线性对：‘{\"linear_type\":\"f\", \"bit_len\": 256}’ |
 | 返回值  | 创建群成功：返回http response, 其中ret_code字段值为0;<br> 创建群失败：返回http response, ret_code对应具体的错误码，message字段对应错误信息. |
