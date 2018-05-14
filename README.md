@@ -236,7 +236,7 @@ build.gradle  compile.sh  lib  src
 群签名&&环签名客户端源代码主在src目录下，具体如下：
 
 
-| 源码目录                          | 说明                                       |
+| 源码目录                          |说明                                       |
 | --------------------------- | ---------------------------------------- |
 | main/java/org/bcos/groupsig | **客户端java源码目录**:<br>1.app子目录：群签名和环签名客户端实现代码 <br> 2.group_sig_sol子目录: 从合约转换的java代码 <br> (转换方法可参考[web3sdk使用指南]( https://github.com/FISCO-BCOS/web3sdk) 第(五)部分) |
 | main/executive/shell        | **客户端工具脚本和示例配置文件目录**：<br> 1. compile.sh: 客户端一键编译脚本;<br> 2. conn.json:  客户端连接的rpc服务器配置信息<br> ① "ip"：字符串，用于配置rpc服务所在主机IP; <br> ② "port"：字符串，用于配置rpc服务连接端口; <br> ③ "thread_num"：数字，线程数目，主要在压测场景使用<br>（群签名&&环签名客户端为签名、验证、签名上链和签名链上验证提供了多线程压测接口）<br>3. sig_client && runSigService.sh: <br> ① sig_client： 设置jar包路径，并使用java调用jar包内封装的方法; <br> ② runSigService.sh：调用sig_client, 进一步封装群签名和环签名客户端接口，详细介绍见3.2.1节 |
@@ -257,7 +257,7 @@ build.gradle  compile.sh  lib  src
 **create_group ${rpc_config_path} ${group_name} ${gm_pass} ${pbc_param}**
 
 
-| 功能   | 生成群，群主可调用该接口生成群                          |
+| 功能   |生成群，群主可调用该接口生成群                          |
 | ---- | ---------------------------------------- |
 | 参数   | ① rpc_config_path：required, 设置客户端连接的rpc服务器配置信息(具体配置参考conn.json), ip默认值是127.0.0.1， port默认值是8003，thread_num默认值是50;<br>② group_name： required, 生成的群名字;<br> ③ gm_pass: required, 群主访问rpc服务的密码（目前实现版本中没有对gm_pass做校验，使用者可修改rpc服务sig-service添加相关校验<br> ④ pbc_param: optional, 用指定的线性对创建群，默认使用A类型线性对（不同类型线性对安全性不同，目前A类型线性对已经不太安全），针对不同类型线性对，下面给出pbc_param具体示例:<br> A类型线性对: '{\"linear_type\":\"a\", \"q_bits_len\": 256, \"r_bits_len\":256}'<br> A1类型线性对: '{\"linear_type\":\"a_one\", \"order\":512}'<br> E类型线性对: '{\"linear_type\":\"e\", \"q_bits_len\": 512, \"r_bits_len\":512}'<br> F类型线性对：‘{\"linear_type\":\"f\", \"bit_len\": 256}’ |
 | 返回值  | 创建群成功：返回http response, 其中ret_code字段值为0;<br> 创建群失败：返回http response, ret_code对应具体的错误码，message字段对应错误信息. |
@@ -375,7 +375,7 @@ build.gradle  compile.sh  lib  src
 **setup_ring ${rpc_config_path} ${ring_name}**
 
 
-| 功能   | 初始化环参数                                   |
+| 功能   | 初始化环参数                                   |
 | ---- | ---------------------------------------- |
 | 参数   | ① rpc_config_path: required, 客户端连接的rpc服务器配置信息(具体配置参考conn.json)<br>② ring_name: required,  初始化的环名称 |
 | 返回值  | 初始化环参数成功: 返回http response, ret_code为0，返回环参数信息;<br>初始化环参数失败： 返回http response, ret_code为错误码，返回具体出错信息. |
