@@ -434,9 +434,9 @@ function update_group_sig_data()
 }
 ####group sig example
 #create_group "conn.json" "group4" "123" '"{\"linear_type\":\"f\", \"bit_len\":256}"'
-#join_group "conn.json" "group4" "test1"
-#group_sig "conn.json" "group4" "test1" "hello" "1"
-#deploy_group_sig "conn.json" "group4" "test1" "hello"
+#join_group "conn.json" "group4" "member1"
+#group_sig "conn.json" "group4" "member1" "hello"
+#deploy_group_sig "conn.json" "group4" "member1" "hello"
 #eth_group_verify "conn.json" "0x1af99bf7d62bf6629459d47399358b23c19fcbd2"
 #update_group_sig_data "conn.json" "0x1af99bf7d62bf6629459d47399358b23c19fcbd2" "group4" "test1" "hello" 
 
