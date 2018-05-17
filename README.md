@@ -106,7 +106,7 @@
 [centos]
 sudo yum -y install git
 sudo yum -y install dos2unix
-sudo yum -y intall lsof
+sudo yum -y install lsof
 
 [ubuntu]
 sudo apt install git
