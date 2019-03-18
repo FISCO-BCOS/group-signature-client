@@ -125,7 +125,7 @@ ln -s /usr/bin/fromdos /usr/bin/dos2unix
 
 **（3）部署fisco-bcos，并开启【群签名&&环签名】验证开关**
 
-sig-service-client可将群签名和环签名信息上链，并在链上验证签名，若要使用群签名和环签名的链上验证功能，需要部署fisco-bcos，并开启【群签名&&环签名】验证开关（cmake时，加上-DGROUPSIG=ON选项），fisco-bcos详细搭建步骤，以及【群签名&&环签名】验证开关开启方法可参考：[启用/关闭群签名&&环签名ethcall](https://github.com/FISCO-BCOS/FISCO-BCOS/blob/master/doc/启用_关闭群签名环签名ethcall.md)
+sig-service-client可将群签名和环签名信息上链，并在链上验证签名，若要使用群签名和环签名的链上验证功能，需要部署fisco-bcos，并开启【群签名&&环签名】验证开关（cmake时，加上-DGROUPSIG=ON选项），fisco-bcos详细搭建步骤，以及【群签名&&环签名】验证开关开启方法可参考：[启用/关闭群签名&&环签名ethcall](https://github.com/FISCO-BCOS/FISCO-BCOS/blob/master-1.3/doc/启用_关闭群签名环签名ethcall.md)
 
 <br>
 
@@ -851,7 +851,7 @@ eth_ring_verify "conn.json" "0x418d9da6382993e6955135db364c7dba88e483a4"
 
 **(1) 环签名的签名长度、签名和验证时间与环成员数目呈线性关系：**<br>
 **① 用于签名的环成员数目ring_size越大，签名和验证时间越长;**<br>
-**② [FISCO BCOS](https://github.com/FISCO-BCOS/FISCO-BCOS)默认gas是30000000:**<br>
+**② [FISCO BCOS](https://github.com/FISCO-BCOS/FISCO-BCOS/tree/master-1.3)默认gas是30000000:**<br>
 当环成员数增加到**62**时，链上节点会抛出outOf gas的异常，可通过调整maxTransactionGas和maxBlockHeadGas增加系统gas最大限制，从而解决gas超过系统gas限制问题，<br> 调整方法可参考[系统参数说明文档](#https://github.com/FISCO-BCOS/Wiki/tree/master/%E7%B3%BB%E7%BB%9F%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3)，具体设置方法如下：<br>
 
 ```bash
