@@ -1,39 +1,20 @@
-# 群签名&&环签名客户端操作手册
+# GroupSig-Client
 
-## 目录
-<!-- TOC -->
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![GitHub issues](https://img.shields.io/github/issues/FISCO-BCOS/sig-service-client.svg)](https://github.com/FISCO-BCOS/sig-service-client/issues)
+![GitHub All Releases](https://img.shields.io/github/downloads/FISCO-BCOS/sig-service-client/total.svg)
+[![GitHub license](https://img.shields.io/github/license/FISCO-BCOS/sig-service-client.svg)](https://github.com/FISCO-BCOS/sig-service-client/blob/master/License.txt)
 
-- [1 基本介绍](#1-基本介绍)
-    - [1.1 基本功能](#11-基本功能)
-    - [1.2 场景](#12-场景)
-- [2 部署](#2-部署)
-    - [2.1 依赖部署](#21-依赖部署)
-    - [2.2 群签名&&环签名客户端部署](#22-群签名环签名客户端部署)
-- [3 群签名&&环签名客户端使用](#3-群签名环签名客户端使用)
-    - [3.1 客户端源代码结构](#31-客户端源代码结构)
-    - [3.2 群签名&&环签名客户端接口](#32-群签名环签名客户端接口)
-        - [3.2.1 群签名RPC访问相关的接口](#321-群签名rpc访问相关的接口)
-        - [3.2.2 环签名RPC访问相关的接口](#322-环签名rpc访问相关的接口)
-        - [3.2.3 群签名&&环签名上链相关的接口](#323-群签名环签名上链相关的接口)
-    - [3.3 群签名&&环签名客户端使用示例](#33-群签名环签名客户端使用示例)
-        - [3.3.1 群签名使用示例](#331-群签名使用示例)
-        - [3.3.2 环签名使用示例](#332-环签名使用示例)
-- [4 注意事项](#4-注意事项)
-	- [4.1 群签名相关](#41-群签名相关)
-	- [4.2 部署环签名注意事项](#42-部署环签名注意事项)
-        
-<!-- /TOC -->
- 
-=============
+群签名客户端，负责调用服务端群/环签名RPC接口生成签名，并与节点通信调用预编译合约实现签名的链上认证。
 
 
-## 1 基本介绍
-### 1.1 基本功能
+## 基本介绍
+### 基本功能
 **（1）群签名**
 
  **向机构内成员提供生成群、密钥托管以及群签名服务**
 
-- 机构内成员通过客户端sig_client访问群签名服务，可生成群、加入指定群、请求获取群签名；
+- 机构内成员通过客户端groupsig-client访问群签名服务，可生成群、加入指定群、请求获取群签名；
 - 部署在可信第三方的群签名服务提供密钥托管功能；
 - 机构成员可通过调整线性对参数，折中安全性和签名速度
 
@@ -43,56 +24,51 @@
 
 <br>
 
-**（2）环签名：向机构内成员提供生成环签名服务**
+**（2）环签名**
 
-- 成员可根据安全性需求动态调整环大小，在安全性和签名速度两方面做折中
+**向机构内成员提供生成环签名服务**
+
+- 成员可根据安全性需求动态调整环大小，在安全性和签名速度两方面做平衡
 - 支持密钥托管 && 密钥自管理
 
 <br>
 
 **（3）签名链上验证 && 存证**
 
-- 通过sig_client客户端，可链上验证群签名 && 环签名，保证签名不可篡改；
+- 通过groupsig-client客户端，可链上验证群签名 && 环签名，保证签名不可篡改；
 
-- sig_client客户端以联盟链机构身份（如webank等）将签名数据上链，其他成员可重复验证签名的有效性（存证的简单demo）；
+- groupsig-client客户端以联盟链机构身份（如webank等）将签名数据上链，其他成员可重复验证签名的有效性（存证的简单demo）；
 
 - 区块链上其他成员通过签名无法获取机构成员的身份信息，仅可获取成员所属的机构和群组；
 
-
-[返回目录](#目录)
- 
 <br> 
 
-### 1.2 场景
+### 引用场景
 
 **（1）群签名场景**
 
-- **场景1**： 机构内成员（C端用户）通过客户端sig_client访问机构内群签名服务，并在链上验证签名，保证成员的匿名性和签名的不可篡改，监管也可通过群主（可信机构，如webank）追踪签名者信息（如拍卖、匿名存证等场景）
+- **场景1**： 机构内成员（C端用户）通过客户端groupsig-client访问机构内群签名服务，并在链上验证签名，保证成员的匿名性和签名的不可篡改，监管也可通过群主（可信机构，如webank）追踪签名者信息（如拍卖、匿名存证等场景）
 
 - **场景2**：机构内下属机构各部署一套群签名服务，通过上级联盟链机构成员，将签名信息写到区块链上，链上验证群签名，保证签名的匿名性和不可篡改；（如征信等场景）
 
-- **场景3**：B端用户部署群签名服务，生成群签名，通过AMOP将签名信息发送给上链结构(如webank)，上链机构将收集到的签名信息统一上链（如竞标、对账等场景）
+- **场景3**：B端用户部署群签名服务，生成群签名，通过AMOP将签名信息发送给上链机构(如groupsig-client)，上链机构将收集到的签名信息统一上链（如竞标、对账等场景）
 
 <br>
 
 **（2）环签名场景**
 
-- **场景1（匿名投票）**：机构内成员（C端用户）通过客户端sig-service-client访问机构内环签名服务，对投票信息进行签名，并通过可信机构（如webank）将签名信息和投票结果写到链上，其他人可验证签名和投票，仅可知道发布投票到链上的机构，却无法获取投票者身份信息
+- **场景1（匿名投票）**：机构内成员（C端用户）通过客户groupsig-client访问机构内环签名服务，对投票信息进行签名，并通过可信机构（如webank）将签名信息和投票结果写到链上，其他人可验证签名和投票，仅可知道发布投票到链上的机构，却无法获取投票者身份信息
 
-- **其他场景（如匿名存证、征信）**：场景与群签名匿名存证、征信场景类似，唯一的区别是任何人都无法追踪签名者身份
+- **场景2（匿名存证、征信）**：场景与群签名匿名存证、征信场景类似，唯一的区别是任何人都无法追踪签名者身份
 
-- **匿名交易**：在UTXO模型下，可将环签名算法应用于匿名交易，任何人都无法追踪转账交易双方；
- 
-<br>
-
-[返回目录](#目录)
+- **场景3（匿名交易）**：在UTXO模型下，可将环签名算法应用于匿名交易，任何人都无法追踪转账交易双方；
 
 <br>
 
-## 2 部署
-部署群签名&&环签名客户端，首先需要部署依赖软件，保证代码和脚本能正确编译和运行；此外，由于该客户端依赖于签名rpc提供的群签名和环签名服务，因此还需要参考[群签名&&环签名RPC服务](https://github.com/FISCO-BCOS/sig-service)部署签名rpc服务；最后，需要编译该客户端，生成相关的jar包。
+## 部署客户端
+部署群签名&&环签名客户端，首先需要部署依赖软件，保证代码和脚本能正确编译和运行；此外，由于该客户端依赖于签名rpc提供的群签名和环签名服务，因此还需要参考[群签名&&环签名RPC服务](https://github.com/FISCO-BCOS/sig-service)部署签名RPC服务；最后，需要编译该客户端，生成相关的jar包。
 
-### 2.1 依赖部署
+### 依赖部署
 **（1）安装依赖软件**
 
 部署群签名&&环签名客户端之前需要安装git, dos2unix, lsof依赖软件
@@ -103,15 +79,14 @@
 可用如下命令安装这些软件：
 
 ```shell
-[centos]
-sudo yum -y install git
-sudo yum -y install dos2unix
-sudo yum -y install lsof
+# [Centos]
+sudo yum -y install git lsof dos2unix
 
-[ubuntu]
-sudo apt install git
-sudo apt install lsof
-sudo apt install tofrodos
+# [Mac Os]
+brew install git lsof dos2unix
+
+# [Ubuntu] 没有dos2unix工具
+sudo apt install git lsof tofrodos
 ln -s /usr/bin/todos /usr/bin/unxi2dos
 ln -s /usr/bin/fromdos /usr/bin/dos2unix
 ```
@@ -119,51 +94,47 @@ ln -s /usr/bin/fromdos /usr/bin/dos2unix
 
 **（2）部署签名RPC服务**
 
-签名RPC服务sig-service为群签名和环签名客户端sig-service-client提供群签名和环签名服务，因此启动客户端之前，需要先部署签名RPC服务sig-service，**sig-service详细部署步骤可参考**：https://github.com/FISCO-BCOS/sig-service
+签名RPC服务groupsig-service为群签名和环签名客户端groupsig-client提供群签名和环签名服务，因此启动客户端之前，需要先部署签名RPC服务groupsig-service，**groupsig-service详细部署步骤可参考**：https://github.com/FISCO-BCOS/sig-service
 
 <br>
 
 **（3）部署fisco-bcos，并开启【群签名&&环签名】验证开关**
 
-sig-service-client可将群签名和环签名信息上链，并在链上验证签名，若要使用群签名和环签名的链上验证功能，需要部署fisco-bcos，并开启【群签名&&环签名】验证开关（cmake时，加上-DGROUPSIG=ON选项），fisco-bcos详细搭建步骤，以及【群签名&&环签名】验证开关开启方法可参考：[启用/关闭群签名&&环签名ethcall](https://github.com/FISCO-BCOS/FISCO-BCOS/blob/master-1.3/doc/启用_关闭群签名环签名ethcall.md)
+groupsig-client可将群签名和环签名信息上链，并在链上验证签名，若要使用群签名和环签名的链上验证功能，需要部署fisco-bcos，并开启【隐私模块】开关（cmake时，加上-DCRYPTO_EXTENSION=ON选项），fisco-bcos详细搭建步骤，以及【隐私模块】验证开关开启方法可参考：[启用/关闭隐私模块](https://github.com/FISCO-BCOS/FISCO-BCOS/)
 
 <br>
 
-[返回目录](#目录)
-
 <br>
 
-### 2.2 群签名&&环签名客户端部署
+### 安装客户端
 
-依赖部署完毕后，就可以拉取群签名&&环签名客户端sig-service-client代码，配置链上节点信息，并部署客户端，详细步骤如下：
+依赖部署完毕后，就可以拉取群/环签名客户端groupsig-client代码，配置链上节点信息，并部署客户端，详细步骤如下：
 
-**（1）拉取sig-service-client代码**
+**（1）拉取groupsig-client代码**
 
 - 从git上拉取代码
 - 若是linux/unix环境，安装依赖软件之后，执行format.sh脚本格式化shell脚本和json配置文件，使其可被linux/unix正确解析
 
 ```bash
-#拉取git代码
+# 拉取git代码
 git clone https://github.com/FISCO-BCOS/sig-service-client
-#格式化shell脚本和json配置文件
-[app@VM_105_58_centos sig-service-client]$ bash format.sh
+# 格式化shell脚本和json配置文件
+bash format.sh
 ```
 
 <br>
 
 **（2）配置链上节点信息和证书**
 
-sig-service-client/sig_client/src/main/resources目录下包含链上链上节点相关的配置文件以及证书，为了使客户端连上区块链节点，主要有以下设置（详细配置方法可参考[web3sdk使用指南]( https://github.com/FISCO-BCOS/web3sdk) 第(三)部分）：
+groupsig-client/src/main/resources目录下包含链上链上节点相关的配置文件以及证书，为了使客户端连上区块链节点，主要有以下设置（详细配置方法可参考[web3sdk使用指南]( https://github.com/FISCO-BCOS/web3sdk) ）：
 
 <br>  
 
 
-| <div align = left>配置文件</div>                   | <div align = left>主要设置</div>                                     |
-| ---------------------- | ---------------------------------------- |
-| applicationContext.xml | 客户端配置文件，需要配置区块链节点IP和channelPort信息，一个配置示例如下 |
-| ca.crt                 | CA证书，必须保证和链上节点CA证书一致                     |
-| client.keystore        | 节点连接区块链节点的证书，加载口令是123456                 |
-| user.jks               | 用户客户端证书，加载口令是123456                      |
+| <div align = left>配置文件</div> | <div align = left>主要设置</div>                             |
+| -------------------------------- | ------------------------------------------------------------ |
+| applicationContext.xml           | 客户端配置文件，需要配置区块链节点IP和channelPort信息，可直接拷贝节点 |
+| ca.crt                           | CA证书，必须保证和链上节点CA证书一致                         |
 
 
 **链上节点信息配置示例：**
@@ -190,7 +161,7 @@ sig-service-client/sig_client/src/main/resources目录下包含链上链上节�
 
 <br>
 
-**（3）编译群签名&&环签名客户端**
+**（3）编译签名客户端**
 
 
 web3sdk编译依赖软件如下：
@@ -200,58 +171,45 @@ web3sdk编译依赖软件如下：
 | jdk    | jdk 1.8以上    |
 | gradle | gradle 4.6以上 |
 
-为了方便用户，sig-service-client在sig_client文件夹下配备了自动化编译脚本compile.sh（针对**centos/ubuntu**运行环境，windows环境下也可用gradle编译），参考[compile.sh脚本](sig_client/compile.sh)
+为了方便用户，groupsig-client配备了自动化编译脚本compile.sh（针对**centos/ubuntu/Mac**运行环境，windows环境下也可用gradle编译），参考[compile.sh脚本](compile.sh)
 
 用户通过运行该脚本编译客户端：
 
 ```bash
-#进入sig_client目录
-[app@VM_105_81_centos sig-service-client]$ cd sig_client/    
-[app@VM_105_81_centos sig_client]$ ls
-build.gradle  compile.sh  lib  src
-#调用compile脚本编译群签名&&环签名客户端
-#compile.sh脚本主要包括如下功能:
+# compile.sh脚本主要包括如下功能:
 #(1) 判断系统java版本（jdk版本必须大于1.8）
 #(2) 若系统java版本小于1.8或者系统没安装java，则脚本从官网下载并安装jdk1.8
-#(3) 根据操作系统类型安装依赖包（目前支持Ubuntu和centos/federa）
 #(4) 下载并安装gradle4.6(首次编译时安装，之后再编译不会再安装)
-#(5) 使用grandle build命令编译java工程，产生客户端jar包sig_client.jar: 
-#    会在sig_client目录下生成sig_client_toolkit目录，所有jar包都位于sig_client_toolkit/lib目录下
-# 注：首次编译时，由于可能会安装java和gradle，因此要用root权限执行compile脚本（执行时加sudo）
-#     之后如果再重新编译，则以
-[app@VM_105_81_centos sig_client]$ sudo bash compile.sh 
+#(5) 使用grandle build命令编译java工程，产生客户端jar包groupsig-client.jar: 
+#    会在根目录下生成toolkit目录，所有jar包都位于toolkit/lib目录下
+# 注：首次编译时，由于可能会安装java和gradle，因此要用root权限执行compile脚本
+sudo bash compile.sh 
 ```
 
 <br>
 
-[返回目录](#目录)
 
-<br>
+## 群/环签名客户端使用
 
-
-## 3 群签名&&环签名客户端使用
-
-### 3.1 客户端源代码结构
+### 客户端源代码结构
 
 群签名&&环签名客户端源代码主在src目录下，具体如下：
 
 
-| <div align = left>源码目录</div>                          |<div align = left>说明</div>                                       |
-| --------------------------- | ---------------------------------------- |
-| main/java/org/bcos/groupsig | **客户端java源码目录**:<br>1.app子目录：群签名和环签名客户端实现代码 <br> 2.group_sig_sol子目录: 从合约转换的java代码 <br> (转换方法可参考[web3sdk使用指南]( https://github.com/FISCO-BCOS/web3sdk) 第(五)部分) |
-| main/executive/shell        | **客户端工具脚本和示例配置文件目录**：<br> 1. compile.sh: 客户端一键编译脚本;<br> 2. conn.json:  客户端连接的rpc服务器配置信息<br> ① "ip"：字符串，用于配置rpc服务所在主机IP; <br> ② "port"：字符串，用于配置rpc服务连接端口; <br> ③ "thread_num"：数字，线程数目，主要在压测场景使用<br>（群签名&&环签名客户端为签名、验证、签名上链和签名链上验证提供了多线程压测接口）<br>3. sig_client && runSigService.sh: <br> ① sig_client： 设置jar包路径，并使用java调用jar包内封装的方法; <br> ② runSigService.sh：调用sig_client, 进一步封装群签名和环签名客户端接口，详细介绍见3.2.1节 |
-| main/executive/sol          | **群签名、环签名链上部署和验证合约**：<br> 1. libGroupSig.sol: 群签名库合约，提供群签名链上验证接口；<br> 2. libRingSig.sol: 环签名库合约，提供环签名链上验证接口；<br> 3. testGroupSig.sol: 群签名应用合约示例，将群签名数据写到链上，并返回验证结果，其他用户可调用该合约验证群签名有效性；<br> 4. testRingSig.sol： 环签名应用合约示例，将环签名数据写到链上，并返回验证接口，其他用户可调用该合约验证环签名的有效性； |
-| main/resources              | **配置文件目录**：<br> 配置文件说明可参考2.2节的【配置链上节点信息和证书】 |
+| <div align = left>源码目录</div>  | <div align = left>说明</div>                                 |
+| --------------------------------- | ------------------------------------------------------------ |
+| main/java/org/fisco/bcos/groupsig | **客户端java源码目录**:<br>1.app子目录：群签名和环签名客户端实现代码 <br> 2.contract子目录: 从合约转换的java代码 <br> (转换方法可参考[web3sdk使用指南]( https://github.com/FISCO-BCOS/web3sdk) 第(五)部分) |
+| main/resources/conf               | **客户端工具脚本和示例配置文件目录**：<br>  conn.json:  客户端连接的RPC服务器配置信息<br> ① "ip"：字符串，用于配置rpc服务所在主机IP; <br> ② "port"：字符串，用于配置rpc服务连接端口; <br> ③ "thread_num"：数字，线程数目，主要在压测场景使用<br>（群签名&&环签名客户端为签名、验证、签名上链和签名链上验证提供了多线程压测接口）<br> |
+| main/resources/sol                | **群签名、环签名链上部署和验证合约**：<br> 1. GroupSigPrecompiled.sol: 提供群签名链上验证接口；<br> 2.RingSigPrecompiled.sol: 提供环签名链上验证接口；<br> 3. testGroupSig.sol: 群签名应用合约示例，将群签名数据写到链上，并返回验证结果，其他用户可调用该合约验证群签名有效性；<br> 4. testRingSig.sol： 环签名应用合约示例，将环签名数据写到链上，并返回验证接口，其他用户可调用该合约验证环签名的有效性； |
+| main/resources/node               | **节点配置文件目录**：<br> 配置文件说明可参考【配置链上节点信息和证书】 |
 
 <br>
 
-[返回目录](#目录)
-
 <br>
 
-### 3.2 群签名&&环签名客户端接口
+###  群/环签名客户端接口
 
-#### 3.2.1 群签名RPC访问相关的接口
+#### 群签名RPC访问相关的接口
 
 
 **create_group ${rpc_config_path} ${group_name} ${gm_pass} ${pbc_param}**
@@ -263,8 +221,6 @@ build.gradle  compile.sh  lib  src
 | 返回值  | 创建群成功：返回http response, 其中ret_code字段值为0;<br> 创建群失败：返回http response, ret_code对应具体的错误码，message字段对应错误信息. |
 
 <br>
-
-[返回目录](#目录)
 
 <br>
 
@@ -278,8 +234,6 @@ build.gradle  compile.sh  lib  src
 
 <br>
 
-[返回目录](#目录)
-
 <br>
 
 **group_sig ${rpc_config_path} ${group_name} ${member_name} ${message} ${stress_test}**
@@ -291,8 +245,6 @@ build.gradle  compile.sh  lib  src
 | 返回值  | 生成群签名成功：返回http response，包含签名信息，ret_code值为0；<br>生成群签名失败：返回http response, ret_code对应具体错误码，message记录错误信息. |
 
 <br>
-
-[返回目录](#目录)
 
 <br>
 
@@ -306,8 +258,6 @@ build.gradle  compile.sh  lib  src
 
 <br>
 
-[返回目录](#目录)
-
 <br>
 
 **open_cert ${rpc_config_path} ${group_name} ${sig} ${message} ${gm_pass}**
@@ -319,8 +269,6 @@ build.gradle  compile.sh  lib  src
 | 返回值  | 获取签名对应的签名者证书成功：返回http response, ret_code为0，并返回签名对应的证书获取签名对应的签名者证书失败: 返回http response, ret_code为错误码，返回具体的出错信息. |
 
 <br>
-
-[返回目录](#目录)
 
 <br>
 
@@ -335,8 +283,6 @@ build.gradle  compile.sh  lib  src
 
 <br>
 
-[返回目录](#目录)
-
 <br>
 
 
@@ -350,8 +296,6 @@ build.gradle  compile.sh  lib  src
 
 <br>
 
-[返回目录](#目录)
-
 <br>
 
 **get_member_info ${rpc_config_path} ${group_name} ${member_name} ${member_pass}**
@@ -364,12 +308,10 @@ build.gradle  compile.sh  lib  src
 
 <br>
 
-[返回目录](#目录)
-
 <br>
 
 
-#### 3.2.2 环签名RPC访问相关的接口
+#### 环签名RPC访问相关的接口
 
 
 **setup_ring ${rpc_config_path} ${ring_name}**
@@ -381,8 +323,6 @@ build.gradle  compile.sh  lib  src
 | 返回值  | 初始化环参数成功: 返回http response, ret_code为0，返回环参数信息;<br>初始化环参数失败： 返回http response, ret_code为错误码，返回具体出错信息. |
 
 <br>
-
-[返回目录](#目录)
 
 <br>
 
@@ -397,8 +337,6 @@ build.gradle  compile.sh  lib  src
 
 <br>
 
-[返回目录](#目录)
-
 <br>
 
 
@@ -409,10 +347,6 @@ build.gradle  compile.sh  lib  src
 | ---- | ---------------------------------------- |
 | 参数   | ① rpc_config_path: required, 客户端连接的rpc服务器配置信息(具体配置参考conn.json)   <br>② ring_name: required, 环名称<br>③ member_pos: required, 请求生成签名的换成员在环中的位置<br>④ message: required, 环签名对应的明文信息<br>⑤ ring_size: optional, 用于生成环签名的环大小，默认是，ring_size越大，环签名匿名安全性越高<br>⑥ stress_test: optional, 压测选项，“0”表示只生成一次环签名；"1"表示用\${rpc_config_path}中thread_num指定的线程数并发向签名rpc发送签名请求；默认值为“0” |
 | 返回值  | 生成环签名成功：返回http response, ret_code为0，返回环签名信息; <br>生成环签名失败： 返回http response, ret_code为错误码，返回出错信息. |
-
-<br>
-
-[返回目录](#目录)
 
 <br>
 
@@ -457,10 +391,6 @@ build.gradle  compile.sh  lib  src
 
 <br>
 
-[返回目录](#目录)
-
-<br>
-
 
 **get_ring_private_key ${rpc_config_path} ${ring_name} ${member_pos}**
 
@@ -472,12 +402,10 @@ build.gradle  compile.sh  lib  src
 
 <br>
 
-[返回目录](#目录)
-
 <br>
 
 
-#### 3.2.3 群签名&&环签名上链相关的接口
+#### 群/环签名上链相关的接口
 
 
 **(1) 合约部署接口**
@@ -493,10 +421,6 @@ build.gradle  compile.sh  lib  src
 
 <br>
 
-[返回目录](#目录)
-
-<br>
-
 
 **deploy_ring_sig ${rpc_config_path} ${message} ${ring_name} ${member_pos} ${ring_size}**
 
@@ -508,15 +432,12 @@ build.gradle  compile.sh  lib  src
 
 <br>
 
-[返回目录](#目录)
-
 <br>
 
 
 **(2) 群签名&&环签名链上验证接口**
 
-
-**eth_group_verify ${rpc_config_path} ${contract_address} ${stress_test}**
+**group_sig_verify ${rpc_config_path} ${contract_address} ${stress_test}**
 
 
 | 功能   | <div align = left>验证链上指定群签名信息的有效性</div>                          |
@@ -526,12 +447,9 @@ build.gradle  compile.sh  lib  src
 
 <br>
 
-[返回目录](#目录)
-
 <br>
 
-
-**eth_ring_verify ${rpc_config_path} ${contract_address} ${stress_test}**
+**ring_sig_verify ${rpc_config_path} ${contract_address} ${stress_test}**
 
 
 | 功能   | <div align = left>验证链上指定环签名信息的有效性</div>                          |
@@ -574,17 +492,11 @@ build.gradle  compile.sh  lib  src
 
 <br>
 
-[返回目录](#目录)
 
-<br>
-
-<br>
+### 群/环签名客户端使用示例
 
 
-### 3.3 群签名&&环签名客户端使用示例
-
-
-参考[2.2 群签名&&环签名客户端部署](#22-群签名环签名客户端部署)，编译完sig-service-client后，sig-service-client/sig_client/sig_client_toolkit/bin目录下生成可执行文件runSigService.sh，该文件封装了群签名&&环签名客户端所有接口，可在其中添加相应接口调用，执行该脚本，进而使用客户端。
+参考[2.2 群/环签名客户端部署](#22-群/环签名客户端部署)，编译完groupsig-client后，toolkit/app目录下生成groupsig-client.jar包，之后可以使用客户端。
 
 #### 3.3.1 群签名使用示例
 **(1)创建群**
@@ -597,10 +509,8 @@ build.gradle  compile.sh  lib  src
         "ip": "127.0.0.1",
         "port": "8003"
 }
-#2. 编辑runSigService.sh，在最下面一行增加以下接口调用，以线性对F创建群group1：
+# 执行命令
  create_group "conn.json" "group1" "123" '"{\"linear_type\":\"f\", \"bit_len\":256}"'
-#3. 执行runSigService.sh脚本
- bash runSigService.sh
 ```
 
 <br>
@@ -877,5 +787,24 @@ babel-node tool.js ConfigAction set maxBlockHeadGas 3000000000 #这里假设调�
 
 [返回目录](#目录)
 
-<br>
+## 贡献代码
+
+- 我们欢迎并非常感谢您的贡献，请参阅[代码贡献流程](https://mp.weixin.qq.com/s/hEn2rxqnqp0dF6OKH6Ua-A
+  )。
+- 如项目对您有帮助，欢迎star支持！
+- 如果发现代码存在安全漏洞，请在[这里](https://security.webank.com)上报。
+
+## 加入社区
+
+**FISCO BCOS开源社区**是国内活跃的开源社区，社区长期为机构和个人开发者提供各类支持与帮助。已有来自各行业的数千名技术爱好者在研究和使用FISCO BCOS。如您对FISCO BCOS开源技术及应用感兴趣，欢迎加入社区获得更多支持与帮助。
+
+![](https://media.githubusercontent.com/media/FISCO-BCOS/LargeFiles/master/images/QR_image.png)
+
+## License
+
+![license](https://img.shields.io/badge/license-Apache%20v2-blue.svg)
+
+
+
+GroupSig-Client的开源协议为[APACHE LICENSE 2.0](http://www.apache.org/licenses/). 详情参考[LICENSE](./LICENSE)。
 

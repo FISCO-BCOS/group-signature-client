@@ -89,7 +89,7 @@ jar {
             into 'toolkit/lib'
         }
         copy {
-            from file('src/main/resources/node')
+            from file('src/main/resources/conf')
             into 'toolkit/conf'
         }
         copy {
@@ -97,8 +97,8 @@ jar {
             into 'toolkit/contract'
         }
         copy {
-            from file('src/main/resources/conf')
-            into 'toolkit/apps'
+            from file('src/main/resources/node')
+            into 'toolkit/conf'
         }
     }
 }
