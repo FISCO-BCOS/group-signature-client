@@ -1,5 +1,7 @@
 # GroupSig-Client
 
+![](https://github.com/FISCO-BCOS/FISCO-BCOS/raw/master/docs/images/FISCO_BCOS_Logo.svg?sanitize=true)
+
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 [![GitHub issues](https://img.shields.io/github/issues/FISCO-BCOS/sig-service-client.svg)](https://github.com/FISCO-BCOS/sig-service-client/issues)
 ![GitHub All Releases](https://img.shields.io/github/downloads/FISCO-BCOS/sig-service-client/total.svg)
