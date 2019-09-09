@@ -22,7 +22,7 @@
 				<bean id="group1"  class="org.fisco.bcos.channel.handler.ChannelConnections">
 					<property name="groupId" value="1" />
 					<property name="connectionsStr">
-						<list>
+						<list> <!--这里的IP是区块链节点IP，端口是节点的channelPort-->
 							<value>127.0.0.1:20200</value>
 						</list>
 					</property>
