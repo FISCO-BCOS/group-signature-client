@@ -63,7 +63,7 @@
 | <div align = left>源码目录</div>  | <div align = left>说明</div>                                 |
 | --------------------------------- | ------------------------------------------------------------ |
 | main/java/org/fisco/bcos/groupsig | **客户端java源码目录**:<br>1.app子目录：群签名和环签名客户端实现代码 <br> 2.contract子目录: 从合约转换的java代码 <br> (转换方法可参考[web3sdk使用指南]( https://github.com/FISCO-BCOS/web3sdk) 第(五)部分) |
-| main/resources/conf               | **客户端工具脚本和示例配置文件目录**：<br>  conn.json:  客户端连接的RPC服务器配置信息<br> ① "ip"：字符串，用于配置rpc服务所在主机IP; <br> ② "port"：字符串，用于配置rpc服务连接端口; <br> ③ "thread_num"：数字，线程数目，主要在压测场景使用<br>（群签名&&环签名客户端为签名、验证、签名上链和签名链上验证提供了多线程压测接口）<br> |
+| main/resources/conf               | **客户端工具脚本和示例配置文件目录**：<br>  conn.json:  客户端连接的RPC服务器配置信息<br> ① "ip"：字符串，用于配置rpc服务所在主机IP; <br> ② "port"：字符串，用于配置rpc服务连接端口; <br> ③ "thread_num"：数字，线程数目，主要在压测场景使用<br>（群签名&&环签名客户端为签名、验证、签名上链和签名链上验证提供了多线程压测接口）<br>log4j2.xml: 日志配置文件，使用默认配置即可<br/> |
 | main/resources/sol                | **群签名、环签名链上部署和验证合约**：<br> 1. GroupSigPrecompiled.sol: 提供群签名链上验证接口；<br> 2.RingSigPrecompiled.sol: 提供环签名链上验证接口；<br> 3. testGroupSig.sol: 群签名应用合约示例，将群签名数据写到链上，并返回验证结果，其他用户可调用该合约验证群签名有效性；<br> 4. testRingSig.sol： 环签名应用合约示例，将环签名数据写到链上，并返回验证接口，其他用户可调用该合约验证环签名的有效性； |
 | main/resources/node               | **节点配置文件目录**：<br> 配置文件说明可参考[配置链上节点信息和证书](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/sdk/sdk.html) |
 
