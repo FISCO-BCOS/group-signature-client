@@ -227,7 +227,7 @@ gradle build
 # args[0] : conn.json配置文件路径
 # args[1] : 调用的接口名称
 # args[2:]: 调用的接口参数 
-java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main "./conf/conn.json" create_group "group1" "123" ""
+java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main './conf/conn.json' create_group 'group1' '123' '{\"linear_type\":\"a\", \"q_bits_len\": 256, \"r_bits_len\":256}'
 ```
 
 **(2)群成员加入**
@@ -235,7 +235,7 @@ java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main "./conf/conn.json
 在group1中加入群成员member1。
 
 ```bash
-java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main "./conf/conn.json" join_group "group1" "member1"
+java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main './conf/conn.json' join_group 'group1' 'member1'
 ```
 
 **(3) 生成群签名**
@@ -243,7 +243,7 @@ java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main "./conf/conn.json
 生成群group1中成员member1对信息“hello”的群签名。
 
 ```bash
-java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main "./conf/conn.json" group_sig "group1" "member1" "hello"
+java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main './conf/conn.json' group_sig 'group1' 'member1' 'hello'
 ```
 
 **(4) 产生群签名，将签名信息上链**
@@ -251,7 +251,7 @@ java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main "./conf/conn.json
 首先生成群group1成员member1对信息“hello”的群签名，然后使用[AMOP](https://github.com/FISCO-BCOS/Wiki/tree/master/AMOP%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97)将群签名信息写到链上，返回合约地址。
 
 ```bash
-java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main "./conf/conn.json" deploy_group_sig "group1" "member1" "hello"
+java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main './conf/conn.json' deploy_group_sig 'group1' 'member1' 'hello'
 ```
 
 **(5) 链上验证群签名**
@@ -259,7 +259,7 @@ java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main "./conf/conn.json
 示例：验证部署于地址为0xd6c8a04b8826b0a37c6d4aa0eaa8644d8e35b79f合约处的群签名有效性（返回群签名验证结果true/false）。
 
 ```bash
-java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main "./conf/conn.json" group_sig_verify "0xd6c8a04b8826b0a37c6d4aa0eaa8644d8e35b79f"
+java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main './conf/conn.json' group_sig_verify '0xd6c8a04b8826b0a37c6d4aa0eaa8644d8e35b79f'
 ```
 
 #### 环签名使用示例
@@ -271,7 +271,7 @@ java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main "./conf/conn.json
 调用127.0.0.1 8005端口的群签名服务(群签名RPC服务部署方法参考[群/环签名RPC](https://github.com/FISCO-BCOS/sig-service/tree/dev-2.0) )，初始化环ring1(环成员公/私钥长度默认为1024bits)。
 
 ```bash
-java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main "./conf/conn.json" setup_ring "ring1"
+java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main './conf/conn.json' setup_ring 'ring1'
 ```
 
 **(2) 加入环成员**
@@ -279,7 +279,7 @@ java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main "./conf/conn.json
 在环ring1中加入一个环成员，可重复执行该命令来生成多个环成员。
 
 ```bash
-java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main "./conf/conn.json" join_ring "ring1"
+java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main './conf/conn.json' join_ring 'ring1'
 ```
 
 **(3) 生成环签名**
@@ -287,7 +287,7 @@ java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main "./conf/conn.json
 为环ring1的位置0处的环成员生成对消息“hello”环签名，假设当前的环成员大于4。
 
 ```bash
-java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main "./conf/conn.json" ring_sig "hello" "ring1" "0" "4"
+java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main './conf/conn.json' ring_sig 'hello' 'ring1' '0' '4'
 ```
 
 **(4) 生成环签名，并将签名信息上链**
@@ -295,7 +295,7 @@ java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main "./conf/conn.json
 首先生成环ring1位置0成员对消息“hello”的环签名，然后使用[AMOP](https://github.com/FISCO-BCOS/Wiki/tree/master/AMOP%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97)将环签名信息写到链上，返回合约地址。
 
 ```bash
-java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main "./conf/conn.json" deploy_ring_sig "hello" "ring1" "0" "4"
+java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main './conf/conn.json' deploy_ring_sig 'hello' 'ring1' '0' '4'
 ```
 
 **(5) 环签名信息链上验证**
@@ -303,7 +303,7 @@ java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main "./conf/conn.json
 示例：验证部署于地址为0x2426edaa1173f65cd7d62c93c935bfde329d247c处合约中的环签名有效性，返回验证结果。
 
 ```bash
-java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main "conn.json" ring_sig_verify "0x2426edaa1173f65cd7d62c93c935bfde329d247c"
+java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main 'conn.json' ring_sig_verify '0x2426edaa1173f65cd7d62c93c935bfde329d247c'
 ```
 
 ## 注意事项
