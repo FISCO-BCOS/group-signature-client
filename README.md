@@ -235,7 +235,7 @@ java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main "./conf/conn.json
 在group1中加入群成员member1。
 
 ```bash
-java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main “./conf/conn.json" join_group "group1" "member1"
+java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main "./conf/conn.json" join_group "group1" "member1"
 ```
 
 **(3) 生成群签名**
