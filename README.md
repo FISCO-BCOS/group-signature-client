@@ -7,7 +7,7 @@
 ![GitHub All Releases](https://img.shields.io/github/downloads/FISCO-BCOS/sig-service-client/total.svg)
 [![GitHub license](https://img.shields.io/github/license/FISCO-BCOS/sig-service-client.svg)](https://github.com/FISCO-BCOS/sig-service-client/blob/master/License.txt)
 
-群签名客户端，负责调用服务端[群/环签名RPC接口](https://github.com/FISCO-BCOS/sig-service/tree/dev-2.0)生成签名，并与[FISCO BCOS](https://github.com/FISCO-BCOS/FISCO-BCOS/)节点通信调用预编译合约实现签名的链上认证。
+群签名客户端，负责向[群/环签名服务端](https://github.com/FISCO-BCOS/sig-service/tree/dev-2.0)发起RPC请求生成签名，并与[FISCO BCOS](https://github.com/FISCO-BCOS/FISCO-BCOS/)节点通信调用预编译合约实现签名的链上认证。
 
 ## 基本功能
 **（1）群签名**
