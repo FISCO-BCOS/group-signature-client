@@ -215,6 +215,8 @@ gradle build
 
 #### 群签名使用示例
 
+接口说明详见[客户端接口介绍](#客户端接口介绍)。
+
 **(1)创建群**
 
 调用127.0.0.1 8005端口的群签名服务(群签名RPC服务部署方法参考[群/环签名RPC](https://github.com/FISCO-BCOS/sig-service/tree/dev-2.0) )，创建群组group1，创建群时使用了默认线性对参数。
@@ -223,7 +225,7 @@ gradle build
 # 参数说明
 # 启动groupsig-client程序：java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main
 # args[0] : conn.json配置文件路径
-# args[1] : 调用的接口名称，接口说明详见[客户端接口介绍](#客户端接口介绍)
+# args[1] : 调用的接口名称
 # args[2:]: 调用的接口参数 
 java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main "./conf/conn.json" create_group "group1" "123" ""
 ```
@@ -262,7 +264,9 @@ java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main "./conf/conn.json
 
 #### 环签名使用示例
 
-**(1) 初始化环**
+接口说明详见[客户端接口介绍](#客户端接口介绍)。
+
+(1) 初始化环**
 
 调用127.0.0.1 8005端口的群签名服务(群签名RPC服务部署方法参考[群/环签名RPC](https://github.com/FISCO-BCOS/sig-service/tree/dev-2.0) )，初始化环ring1(环成员公/私钥长度默认为1024bits)。
 
