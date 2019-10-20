@@ -1,22 +1,35 @@
 /*
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
 
-   http://www.apache.org/licenses/LICENSE-2.0
+  http://www.apache.org/licenses/LICENSE-2.0
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License. See accompanying LICENSE file.
- */
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License. See accompanying LICENSE file.
+*/
 
 package org.fisco.bcos.groupsig.app;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import org.apache.http.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -28,20 +41,14 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URI;
-import java.util.*;
-
-//import net.sf.json.JSONObject;
+// import net.sf.json.JSONObject;
 
 public class RequestSigService {
     private String url;
-    private static Logger logger = LogManager.getLogger(RequestSigService.class);
+    private Logger logger = LoggerFactory.getLogger(RequestSigService.class);
 
     public RequestSigService(String _url) {
         url = _url;
@@ -68,12 +75,13 @@ public class RequestSigService {
             int code = response.getStatusLine().getStatusCode();
             // System.out.println("ret_code:" + code);
             if (code == 200) {
-                in = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "utf-8"));
+                in =
+                        new BufferedReader(
+                                new InputStreamReader(response.getEntity().getContent(), "utf-8"));
                 StringBuffer sb = new StringBuffer("");
                 String line = "";
                 String NL = System.getProperty("line.separator");
-                while ((line = in.readLine()) != null)
-                    sb.append(line + NL);
+                while ((line = in.readLine()) != null) sb.append(line + NL);
                 return sb.toString();
             } else {
                 System.out.println("get response failed");
@@ -114,7 +122,7 @@ public class RequestSigService {
 
                 HttpEntity responseEntity = response.getEntity();
                 String jsonStr = EntityUtils.toString(responseEntity);
-                System.out.println("JSON STR:" + jsonStr);
+                System.out.println("JSON STR:\n" + jsonFormart(jsonStr));
                 return jsonStr;
             } else {
                 System.out.println("ret_code:" + retCode);
@@ -138,9 +146,50 @@ public class RequestSigService {
         return null;
     }
 
+    private static String getLevelStr(int level) {
+        StringBuffer levelStr = new StringBuffer();
+        for (int levelI = 0; levelI < level; levelI++) {
+            levelStr.append("\t");
+        }
+        return levelStr.toString();
+    }
+
+    public static String jsonFormart(String s) {
+        int level = 0;
+        StringBuffer jsonForMatStr = new StringBuffer();
+        for (int index = 0; index < s.length(); index++) {
+
+            char c = s.charAt(index);
+
+            if (level > 0 && '\n' == jsonForMatStr.charAt(jsonForMatStr.length() - 1)) {
+                jsonForMatStr.append(getLevelStr(level));
+            }
+            switch (c) {
+                case '{':
+                case '[':
+                    jsonForMatStr.append(c + "\n");
+                    level++;
+                    break;
+                case ',':
+                    jsonForMatStr.append(c + "\n");
+                    break;
+                case '}':
+                case ']':
+                    jsonForMatStr.append("\n");
+                    level--;
+                    jsonForMatStr.append(getLevelStr(level));
+                    jsonForMatStr.append(c);
+                    break;
+                default:
+                    jsonForMatStr.append(c);
+                    break;
+            }
+        }
+        return jsonForMatStr.toString();
+    }
+
     private String getParam(Map paramMap) {
         return JSON.toJSONString(paramMap);
-
     }
 
     private Map<String, Object> genParamMap(String method) {
@@ -267,7 +316,8 @@ public class RequestSigService {
         try {
             return httpPostJson(url, param);
         } catch (Exception e) {
-            logger.error("GET GROUP " + groupName + " public key failed, error msg:" + e.getMessage());
+            logger.error(
+                    "GET GROUP " + groupName + " public key failed, error msg:" + e.getMessage());
             return null;
         }
     }
@@ -304,7 +354,13 @@ public class RequestSigService {
         try {
             return httpPostJson(url, param);
         } catch (Exception e) {
-            logger.error("GetMemberInfo failed, group_name:" + groupName + ", member_name:" + memberName + ", error msg:" + e.getMessage());
+            logger.error(
+                    "GetMemberInfo failed, group_name:"
+                            + groupName
+                            + ", member_name:"
+                            + memberName
+                            + ", error msg:"
+                            + e.getMessage());
             return null;
         }
     }
@@ -342,8 +398,8 @@ public class RequestSigService {
         }
     }
 
-    public boolean linkableRingSig(SigStruct ringSigObj, String message, String ringName, int memberPos,
-                                   int ringSize) {
+    public boolean linkableRingSig(
+            SigStruct ringSigObj, String message, String ringName, int memberPos, int ringSize) {
         Map<String, Object> paramMap = genParamMap("linkable_ring_sig");
         Map<String, Object> subParamMap = new HashMap<String, Object>();
 

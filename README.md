@@ -72,24 +72,19 @@
 ### 依赖部署
 **（1）安装依赖软件**
 
-部署群/环签名客户端之前需要安装git, dos2unix, lsof依赖软件
-
--  git：用于拉取最新代码；
--  dos2unix && lsof: 用于处理windows文件上传到linux服务器时，文件格式无法被linux正确解析的问题。
+部署群/环签名客户端之前需要安装git, 用于拉取最新代码；
 
 ```shell
 # [CentOS]
-sudo yum -y install git lsof dos2unix
+sudo yum -y install git
 
 # [Mac Os]
-brew install git lsof dos2unix
+brew install git
 
-# [Ubuntu] 没有dos2unix工具
-sudo apt install git lsof tofrodos
-ln -s /usr/bin/todos /usr/bin/unxi2dos
-ln -s /usr/bin/fromdos /usr/bin/dos2unix
+# [Ubuntu]
+sudo apt install git 
 ```
-**（2）部署签名RPC服务**
+**（2）部署签名服务端**
 
 签名RPC服务groupsig-service为群签名和环签名客户端groupsig-client提供群签名和环签名服务，因此启动客户端之前，需要先部署签名RPC服务groupsig-service，**groupsig-service详细部署步骤可参考**：[groupsig-service](https://github.com/FISCO-BCOS/sig-service/tree/dev-2.0)。
 
@@ -103,9 +98,6 @@ groupsig-client可将群签名和环签名信息上链，并在链上验证签�
 
 **（1）拉取groupsig-client代码**
 
-- 从git上拉取代码；
-- 若是linux/unix环境，安装依赖软件之后，执行format.sh脚本格式化shell脚本和json配置文件，使其可被linux/unix正确解析。
-
 ```bash
 # 拉取git代码
 git clone https://github.com/FISCO-BCOS/sig-service-client
@@ -113,11 +105,6 @@ git clone https://github.com/FISCO-BCOS/sig-service-client
 #切换分支
 git checkout dev-2.0
 
-# 格式化format.sh脚本
-dos2unix format.sh
-
-# 格式化shell脚本和json配置文件
-bash format.sh
 ```
 
 **（2）配置链上节点信息和证书**
@@ -127,12 +114,18 @@ bash format.sh
 
 | <div align = left>配置文件</div> | <div align = left>主要设置</div>              |
 | -------------------------------- | --------------------------------------------- |
-| applicationContext.xml           | 客户端配置文件，需配置节点IP和channelPort信息 |
+| application.xml                  | 客户端配置文件，需配置节点IP和channelPort信息 |
 | ca.crt                           | CA证书，必须保证和链上节点CA证书一致          |
-| node.crt                         | 节点证书                                      |
-| node.key                         | 节点私钥                                      |
+| sdk.crt                          | sdk证书                                       |
+| sdk.key                          | sdk私钥                                       |
 
-可直接将[控制台]( https://fisco-bcos-documentation.readthedocs.io/zh_CN/release-2.0/docs/installation.html#id7)配置目录下`console/conf/`的所有文件拷贝到`src/main/resources/node/`目录，然后按照示例配置applicationContext.xml文件。
+将节点的conf目录下的ca.crt、sdk.crt和sdk.key文件拷贝到到src/main/resources/node目录，并在该目录下执行：
+
+```
+cp application-sample.xml application.xml
+```
+
+然后按照示例配置application.xml文件，方法可参考[FISCO BCOS节点和证书配置](https://fisco-bcos-documentation.readthedocs.io/zh_CN/release-2.0/docs/manual/console.html#id11)。
 
 **链上节点信息配置示例：**
 
@@ -140,43 +133,42 @@ bash format.sh
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-	   xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
-	   xmlns:context="http://www.springframework.org/schema/context"
-	   xsi:schemaLocation="http://www.springframework.org/schema/beans
-    http://www.springframework.org/schema/beans/spring-beans-2.5.xsd  
-         http://www.springframework.org/schema/tx   
-    http://www.springframework.org/schema/tx/spring-tx-2.5.xsd  
-         http://www.springframework.org/schema/aop   
-    http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
+    <bean id="groupChannelConnectionsConfig"
+        class="org.fisco.bcos.channel.handler.GroupChannelConnectionsConfig">
+        <!-- 配置节点证书 -->
+        <property name="caCert" value="classpath:/node/ca.crt"/>
+        <property name="sslCert" value="classpath:/node/sdk.crt"/>
+        <property name="sslKey" value="classpath:/node/sdk.key"/>
+        <property name="allChannelConnections">
+            <list>
+                <bean id="group1"
+                    class="org.fisco.bcos.channel.handler.ChannelConnections">
+                    <property name="groupId" value="1"/>
+                    <property name="connectionsStr">
+                        <list>
+                            <value>127.0.0.1:20200</value>
+                        </list>
+                    </property>
+                </bean>
+            </list>
+        </property>
+    </bean>
 
-	<bean id="encryptType" class="org.fisco.bcos.web3j.crypto.EncryptType">
-		<constructor-arg value="0"/> <!-- 0:standard 1:guomi -->
-	</bean>
-
-	<bean id="groupChannelConnectionsConfig" class="org.fisco.bcos.channel.handler.GroupChannelConnectionsConfig">
-		<property name="allChannelConnections">
-			<list>
-				<bean id="group1"  class="org.fisco.bcos.channel.handler.ChannelConnections">
-					<property name="groupId" value="1" />
-					<property name="connectionsStr">
-						<list> <!--区块链节点IP，端口是节点的channelPort-->
-							<value>127.0.0.1:20200</value>
-						</list>
-					</property>
-				</bean>
-			</list>
-		</property>
-	</bean>
-
-	<bean id="channelService" class="org.fisco.bcos.channel.client.Service" depends-on="groupChannelConnectionsConfig">
-		<property name="groupId" value="1" />
-		<property name="orgID" value="fisco" />
-		<property name="allChannelConnections" ref="groupChannelConnectionsConfig"></property>
-	</bean>
+    <bean id="channelService"
+        class="org.fisco.bcos.channel.client.Service"
+        depends-on="groupChannelConnectionsConfig">
+        <property name="groupId" value="1"/>
+        <property name="agencyName" value="fisco"/>
+        <property name="allChannelConnections"
+            ref="groupChannelConnectionsConfig"></property>
+    </bean>
 
 </beans>
+
 
 ```
 
@@ -184,38 +176,17 @@ bash format.sh
 
 编译客户端需安装jdk v1.8以上，以及gradle v4.6以上。
 
-为了方便用户，groupsig-client配备了自动化编译脚本compile.sh(针对**CentOS/Ubuntu**运行环境，windows环境下也可用gradle编译)，参考[compile.sh脚本](compile.sh)。
-
-通过运行该脚本编译客户端：
-
 ```bash
-# compile.sh脚本主要包括如下功能:
-#(1) 判断系统java版本（jdk版本必须大于1.8）
-#(2) 若系统java版本小于1.8或者系统没安装java，则脚本从官网下载并安装jdk1.8
-#(3) 下载并安装gradle4.6(首次编译时安装，之后再编译不会再安装)
-#(4) 使用grandle build命令编译java工程，产生客户端jar包groupsig-client.jar: 
-#    会在根目录下生成toolkit目录，所有依赖包都位于toolkit/lib目录下
-# 注：首次编译时，由于可能会安装java和gradle，因此要用root权限执行compile脚本
-sudo bash compile.sh 
-```
-
-**Mac OS**系统编译方法：
-
-```
-# 安装jdk和gradle
-brew cask install java8
-brew install gradle
-# 编译代码
-gradle build
+./gradlew build
 ```
 
 ## 使用客户端
 
-编译完groupsig-client后，toolkit/app目录下生成客户端jar包，之后可以使用客户端。
+编译完groupsig-client后，dist/app目录下生成客户端jar包，之后可以使用客户端。
 
 #### 群签名使用示例
 
-接口说明详见[客户端接口介绍](#客户端接口介绍)。
+接口说明详见[客户端接口介绍](#客户端接口介绍)，以下命令在dist目录下执行。
 
 **(1)创建群**
 
