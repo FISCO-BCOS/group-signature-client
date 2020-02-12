@@ -3,11 +3,11 @@
 ![](https://github.com/FISCO-BCOS/FISCO-BCOS/raw/master/docs/images/FISCO_BCOS_Logo.svg?sanitize=true)
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
-[![GitHub issues](https://img.shields.io/github/issues/FISCO-BCOS/sig-service-client.svg)](https://github.com/FISCO-BCOS/sig-service-client/issues)
-![GitHub All Releases](https://img.shields.io/github/downloads/FISCO-BCOS/sig-service-client/total.svg)
-[![GitHub license](https://img.shields.io/github/license/FISCO-BCOS/sig-service-client.svg)](https://github.com/FISCO-BCOS/sig-service-client/blob/master/License.txt)
+[![GitHub issues](https://img.shields.io/github/issues/FISCO-BCOS/group-signature-client.svg)](https://github.com/FISCO-BCOS/group-signature-client/issues)
+![GitHub All Releases](https://img.shields.io/github/downloads/FISCO-BCOS/group-signature-client/total.svg)
+[![GitHub license](https://img.shields.io/github/license/FISCO-BCOS/group-signature-client.svg)](https://github.com/FISCO-BCOS/group-signature-client/blob/master/License.txt)
 
-群签名客户端，负责向[群/环签名服务端](https://github.com/FISCO-BCOS/sig-service/tree/dev-2.0)发起RPC请求生成签名，并与[FISCO BCOS](https://github.com/FISCO-BCOS/FISCO-BCOS/)节点通信调用预编译合约实现签名的链上认证。
+群签名客户端，负责向[群/环签名服务端](https://github.com/FISCO-BCOS/group-signature-server/tree/dev-2.0)发起RPC请求生成签名，并与[FISCO BCOS](https://github.com/FISCO-BCOS/FISCO-BCOS/)节点通信调用预编译合约实现签名的链上认证。
 
 ## 基本功能
 **（1）群签名**
@@ -86,7 +86,7 @@ sudo apt install git
 ```
 **（2）部署签名服务端**
 
-签名RPC服务groupsig-service为群签名和环签名客户端groupsig-client提供群签名和环签名服务，因此启动客户端之前，需要先部署签名RPC服务groupsig-service，**groupsig-service详细部署步骤可参考**：[groupsig-service](https://github.com/FISCO-BCOS/sig-service/tree/dev-2.0)。
+签名RPC服务group-signature-server为群签名和环签名客户端groupsig-client提供群签名和环签名服务，因此启动客户端之前，需要先部署签名RPC服务group-signature-server，**group-signature-server详细部署步骤可参考**：[group-signature-server](https://github.com/FISCO-BCOS/group-signature-server/tree/dev-2.0)。
 
 **（3）部署fisco-bcos**
 
@@ -100,7 +100,7 @@ groupsig-client可将群签名和环签名信息上链，并在链上验证签�
 
 ```bash
 # 拉取git代码
-git clone https://github.com/FISCO-BCOS/sig-service-client
+git clone https://github.com/FISCO-BCOS/group-signature-client
 
 #切换分支
 git checkout dev-2.0
@@ -190,7 +190,7 @@ cp application-sample.xml application.xml
 
 **(1)创建群**
 
-调用127.0.0.1 8005端口的群签名服务(群签名RPC服务部署方法参考[群/环签名RPC](https://github.com/FISCO-BCOS/sig-service/tree/dev-2.0) )，创建群组group1，创建群时使用了默认线性对参数。
+调用127.0.0.1 8005端口的群签名服务(群签名RPC服务部署方法参考[群/环签名RPC](https://github.com/FISCO-BCOS/group-signature-server/tree/dev-2.0) )，创建群组group1，创建群时使用了默认线性对参数。
 
 ```bash
 # 参数说明
@@ -239,7 +239,7 @@ java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main './conf/conn.json
 
 (1) 初始化环**
 
-调用127.0.0.1 8005端口的群签名服务(群签名RPC服务部署方法参考[群/环签名RPC](https://github.com/FISCO-BCOS/sig-service/tree/dev-2.0) )，初始化环ring1(环成员公/私钥长度默认为1024bits)。
+调用127.0.0.1 8005端口的群签名服务(群签名RPC服务部署方法参考[群/环签名RPC](https://github.com/FISCO-BCOS/group-signature-server/tree/dev-2.0) )，初始化环ring1(环成员公/私钥长度默认为1024bits)。
 
 ```bash
 java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main './conf/conn.json' setup_ring 'ring1'
@@ -321,7 +321,7 @@ babel-node tool.js ConfigAction set maxBlockHeadGas 3000000000 #这里假设调�
 
 | 功能   | <div align = left>生成群，群主可调用该接口生成群</div>       |
 | ------ | ------------------------------------------------------------ |
-| 参数   | ① group_name： required, 生成的群名字;<br>②gm_pass: required, 群主访问rpc服务的密码（目前实现版本中没有对gm_pass做校验，使用者可修改rpc服务sig-service添加相关校验<br>③ pbc_param: optional, 用指定的线性对创建群，默认使用A类型线性对（不同类型线性对安全性不同，目前A类型线性对已经不太安全），针对不同类型线性对，下面给出pbc_param具体示例:<br> A类型线性对: '{\"linear_type\":\"a\", \"q_bits_len\": 256, \"r_bits_len\":256}'<br> A1类型线性对: '{\"linear_type\":\"a_one\", \"order\":512}'<br> E类型线性对: '{\"linear_type\":\"e\", \"q_bits_len\": 512, \"r_bits_len\":512}'<br> F类型线性对：‘{\"linear_type\":\"f\", \"bit_len\": 256}’ |
+| 参数   | ① group_name： required, 生成的群名字;<br>②gm_pass: required, 群主访问rpc服务的密码（目前实现版本中没有对gm_pass做校验，使用者可修改rpc服务group-signature-server添加相关校验<br>③ pbc_param: optional, 用指定的线性对创建群，默认使用A类型线性对（不同类型线性对安全性不同，目前A类型线性对已经不太安全），针对不同类型线性对，下面给出pbc_param具体示例:<br> A类型线性对: '{\"linear_type\":\"a\", \"q_bits_len\": 256, \"r_bits_len\":256}'<br> A1类型线性对: '{\"linear_type\":\"a_one\", \"order\":512}'<br> E类型线性对: '{\"linear_type\":\"e\", \"q_bits_len\": 512, \"r_bits_len\":512}'<br> F类型线性对：‘{\"linear_type\":\"f\", \"bit_len\": 256}’ |
 | 返回值 | 创建群成功：返回http response, 其中ret_code字段值为0;<br> 创建群失败：返回http response, ret_code对应具体的错误码，message字段对应错误信息. |
 
 **join_group ${rpc_config_path} ${group_name} ${member_name}**
