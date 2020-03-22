@@ -41,6 +41,7 @@ console.tar.gz
 nodes/
 console/
 out/
+application.xml
 
 src/main/resources/node/application.yml
 .crt
