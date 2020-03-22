@@ -168,20 +168,20 @@ java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main ring_sig_verify '
 
 ### 注意事项
 
+- 环签名限制
+
+由于环签名的签名长度以及签名/验证时间与环成员数目呈线性关系，为防止超gas，每个环的环成员数量不能超过32个。
+
 - 群签名算法签名和验证时间与群成员数目无关，具有良好的可扩展性。
 
 - 群签名算法签名长度与线性对参数设置有关，不同线性对对应的公私钥长度和签名长度如下：
 
-| 线性对参数                                                   | 长度信息                                               |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| **A类型线性对：**<br> {<br>"linear_type":"a",<br>"q_bit_len":256,<br>"r_bit_len":256<br>} | 1. 私钥信息 (912字节) <br>2. 公钥长度信息（2700字节）<br>3. 签名消息长度信息（1602字节） |
-| **A1类型线性对：**<br> {<br>"linear_type":"a_one",<br>"order":512<br>}| 1. 私钥信息 (1293字节) <br>2. 公钥长度信息（5180字节）<br>3. 签名消息长度信息（3102字节） |
-| **E类型线性对：**<br>{<br>"linear_type":"e",<br>"q_bits_len":1024,<br>"r_bits_len":160}<br> | 1. 私钥信息 (905字节) <br>2. 公钥长度信息（4148字节）<br>3. 签名消息长度信息（2328字节） |
-| **F类型线性对：**<br>{<br>"linear_type":"f",<br>"bit_len":256<br>}     | 1. 私钥信息 (653字节) <br>2. 公钥长度信息（2358字节）<br>3. 签名消息长度信息（1584字节）|
-
-- 环签名限制
-
-由于环签名的签名长度以及签名/验证时间与环成员数目呈线性关系，为防止超gas，每个环的环成员数量不能超过32个。
+| 线性对参数                                                   | 私钥大小（字节）    |   公钥大小（字节） | 签名大小（字节） |
+| ------------------------------------------------------------ | ------------ |------------ |------------ |
+|**A类型线性对：**<br> {<br>"linear_type":"a",<br>"q_bit_len":256,<br>"r_bit_len":256<br>} |912 |2700 |1602 |
+|**A1类型线性对：**<br> {<br>"linear_type":"a_one",<br>"order":512<br>} |1293 |5180 |3102 |
+|**E类型线性对：**<br>{<br>"linear_type":"e",<br>"q_bits_len":1024,<br>"r_bits_len":160}<br>| 905| 4148| 2328|
+|**F类型线性对：**<br>{<br>"linear_type":"f",<br>"bit_len":256<br>}  |653 |2358 | 1584|
 
 ## 接口说明
 
@@ -202,4 +202,4 @@ java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main ring_sig_verify '
 
 ![license](https://img.shields.io/github/license/FISCO-BCOS/group-signature-client.svg)
 
-group-signature-client的开源协议为[GNU GENERAL PUBLIC LICENSE](http://www.gnu.org/licenses/gpl-3.0.en.html). 详情参考[LICENSE](./LICENSE)。
+group-signature-client的开源协议为[APACHE LICENSE 2.0](http://www.apache.org/licenses/). 详情参考[LICENSE](./LICENSE)。
