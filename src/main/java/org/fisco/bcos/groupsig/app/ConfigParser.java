@@ -41,7 +41,7 @@ public class ConfigParser {
         return threadNum;
     }
 
-    public ConfigParser(String paramConfigFile) {
+    public ConfigParser(String paramConfigFile) throws Exception {
         configFile = paramConfigFile;
         parseJsonStr();
     }
@@ -95,22 +95,18 @@ public class ConfigParser {
         }
     }
 
-    private void parseJsonStr() {
-        connIp = "127.0.0.1";
-        connPort = "8005";
-        threadNum = 10; // default thread num
-        if (configFile.equals("") == false) {
-            String jsonStr = read(configFile);
-            if (jsonStr != null) {
-                JSONObject jsonObj = JSONObject.parseObject(jsonStr);
-                if (jsonObj != null) {
-                    if (jsonObj.containsKey("ip")) connIp = jsonObj.getString("ip");
+    private void parseJsonStr() throws Exception {
+        String jsonStr = read(configFile);
+        if (jsonStr != null) {
+            JSONObject jsonObj = JSONObject.parseObject(jsonStr);
+            if (jsonObj != null) {
+                if (jsonObj.containsKey("ip")) connIp = jsonObj.getString("ip");
 
-                    if (jsonObj.containsKey("port")) connPort = jsonObj.getString("port");
-                    if (jsonObj.containsKey("threadNum"))
-                        threadNum = jsonObj.getIntValue("thread_num");
-                }
+                if (jsonObj.containsKey("port")) connPort = jsonObj.getString("port");
+                if (jsonObj.containsKey("threadNum")) threadNum = jsonObj.getIntValue("thread_num");
             }
+        } else {
+            throw new Exception("parse conn.json failed");
         }
         logger.info("ip: {}, port: {}", connIp, connPort);
     }
