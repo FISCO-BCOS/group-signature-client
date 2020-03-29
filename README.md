@@ -27,13 +27,13 @@
 
 **部署服务端**
 
-群/环签名客户端要访问签名服务，因此需要先部署服务端，详细步骤可参考[操作文档](https://github.com/FISCO-BCOS/sig-service)。
+群/环签名客户端要访问签名服务，因此需要先部署服务端，详细步骤可参考[操作文档](https://github.com/FISCO-BCOS/group-signature-server)。
 
 **部署FISCO BCOS**
 
 客户端可将群/环签名上链，若要使用链上验证功能，需要部署FISCO BCOS，并开启隐私模块开关。
 
-FISCO BCOS详细搭建步骤，以及隐私模块启用方法可参考[操作手册](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/privacy.html)。
+FISCO BCOS详细搭建步骤，以及隐私模块启用方法可参考[操作文档](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/privacy.html)。
 
 ## 编译与配置
 
@@ -52,17 +52,17 @@ cd group-signature-client
 
 **配置客户端**
 
-1. 配置RPC服务：`dist/conf/conn.json`
+(1) 配置RPC服务：`dist/conf/conn.json`
 
 - ip：服务端IP，默认是127.0.0.1
 - port：服务端RPC监听端口，默认是8005
 - thread_num：线程数目，压测场景使用
 
-2. 配置日志：`dist/conf/log4j.properties`
+(2) 配置日志：`dist/conf/log4j.properties`
 
 - 使用默认配置即可
 
-3. 配置区块链节点信息：`dist/conf/node`
+(3) 配置区块链节点信息：`dist/conf/node`
 
 - 将`dist/conf/node`目录下的`application-sample.xml`拷贝成`application.xml`
 - 将节点的`nodes/127.0.0.1/sdk`目录下的`ca.crt`、`sdk.crt`和`sdk.key`文件拷贝`dist/conf/node`目录下
