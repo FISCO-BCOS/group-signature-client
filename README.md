@@ -4,10 +4,10 @@
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 [![GitHub issues](https://img.shields.io/github/issues/FISCO-BCOS/group-signature-client.svg)](https://github.com/FISCO-BCOS/group-signature-client/issues)
-[![All releases](https://img.shields.io/github/release/FISCO-BCOS/group-signature-client.svg)](https://github.com/FISCO-BCOS/group-signature-client/releases)
+[![All releases](https://img.shields.io/github/release/FISCO-BCOS/group-signature-client.svg)](https://github.com/FISCO-BCOS/group-signature-client/releases/latest)
 ![](https://img.shields.io/github/license/FISCO-BCOS/group-signature-client) 
 
-群/环签名客户端，负责向[服务端](https://github.com/FISCO-BCOS/group-signature-server)发起RPC请求生成签名，并将签名上链，然后通过调用群/环签名[预编译合约](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/privacy.html#id17)实现签名的链上认证。
+群/环签名客户端，通过向[服务端](https://github.com/FISCO-BCOS/group-signature-server)发起请求生成签名，并将签名上链，然后调用群/环签名[预编译合约](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/privacy.html#id17)实现签名的链上认证。
 
 群/环签名客户端和服务端是专门提供给社区用户的FISCO BCOS[隐私模块](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/privacy.html)关于群/环签名的开发示例，架构如下：
 
@@ -15,7 +15,7 @@
 
 ## 代码结构
 
-| <div align = left>源码目录</div>  | <div align = left>说明</div>                                 |
+| <div align = left>目录</div>  | <div align = left>说明</div>                                 |
 | --------------------------------- | ------------------------------------------------------------ |
 | main/java/org/fisco/bcos/groupsig/app | 客户端主逻辑，包括RPC调用和合约调用 |
 | main/java/org/fisco/bcos/groupsig/contract | 由智能合约转换的java代码 |
@@ -23,21 +23,19 @@
 | main/resources/sol                | 链上部署的智能合约目录|
 | main/resources/node               | 节点配置文件目录 |
 
-## 部署客户端
-
-### 部署依赖
+## 部署依赖
 
 **部署服务端**
 
-群/环签名客户端要访问签名服务，因此需要先部署[服务端](https://github.com/FISCO-BCOS/sig-service)，详细步骤可参考[操作文档](https://github.com/FISCO-BCOS/sig-service)。
+群/环签名客户端要访问签名服务，因此需要先部署服务端，详细步骤可参考[操作文档](https://github.com/FISCO-BCOS/sig-service)。
 
 **部署FISCO BCOS**
 
-客户端可将群/环签名上链，若要使用链上验证功能，需要部署[FISCO BCOS](https://github.com/FISCO-BCOS/FISCO-BCOS)，并开启隐私模块开关。
+客户端可将群/环签名上链，若要使用链上验证功能，需要部署FISCO BCOS，并开启隐私模块开关。
 
 FISCO BCOS详细搭建步骤，以及隐私模块启用方法可参考[操作手册](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/privacy.html)。
 
-### 编译与配置
+## 编译与配置
 
 依赖部署完毕后，就可以拉取代码，编译并配置客户端。详细步骤如下：
 
@@ -174,14 +172,14 @@ java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main ring_sig_verify '
 
 - 群签名算法签名和验证时间与群成员数目无关，具有良好的可扩展性。
 
-- 群签名算法签名长度与线性对参数设置有关，不同线性对对应的公私钥长度和签名长度如下：
+- 群签名算法签名长度与线性对参数设置有关，不同线性对的公私钥长度和签名长度（字节）如下：
 
-| 线性对参数                                                   | 私钥大小（字节）    |   公钥大小（字节） | 签名大小（字节） |
+| 线性对参数类型                                                   | 私钥 |   公钥 | 签名 |
 | ------------------------------------------------------------ | ------------ |------------ |------------ |
-|**A类型线性对：**<br> {<br>"linear_type":"a",<br>"q_bit_len":256,<br>"r_bit_len":256<br>} |912 |2700 |1602 |
-|**A1类型线性对：**<br> {<br>"linear_type":"a_one",<br>"order":512<br>} |1293 |5180 |3102 |
-|**E类型线性对：**<br>{<br>"linear_type":"e",<br>"q_bits_len":1024,<br>"r_bits_len":160}<br>| 905| 4148| 2328|
-|**F类型线性对：**<br>{<br>"linear_type":"f",<br>"bit_len":256<br>}  |653 |2358 | 1584|
+|**A：**{"linear_type":"a","q_bit_len":256,"r_bit_len":256} |912 |2700 |1602 |
+|**A1：**{"linear_type":"a_one","order":512} |1293 |5180 |3102 |
+|**E：**{"linear_type":"e","q_bits_len":1024,"r_bits_len":160}| 905| 4148| 2328|
+|**F：**{"linear_type":"f","bit_len":256}  |653 |2358 | 1584|
 
 ## 接口说明
 
