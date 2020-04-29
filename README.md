@@ -85,7 +85,7 @@ cd group-signature-client
 # 启动客户端程序：java -cp 'apps/*:lib/*:conf' org.fisco.bcos.groupsig.app.Main
 # args[0] : 调用的接口名称
 # args[1:]: 调用的接口参数 
-java -cp 'apps/*:lib/*:conf' org.fisco.bcos.groupsig.app.Main create_group 'group1' '123' '{\"linear_type\":\"a\", \"q_bits_len\":256, \"r_bits_len\":256}'
+java -cp 'apps/*:lib/*:conf' org.fisco.bcos.groupsig.app.Main create_group 'group1' '123' '{"linear_type":"a", "q_bits_len":256, "r_bits_len":256}'
 ```
 
 **(2)群成员加入**
@@ -124,7 +124,7 @@ java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.groupsig.app.Main group_sig_verify 
 
 接口说明详见[环签名接口文档](doc/interface.md#环签名接口)。
 
-(1) 初始化环**
+**(1) 初始化环**
 
 调用127.0.0.1 8005端口的群签名服务(群签名RPC服务部署方法参考[群/环签名RPC](https://github.com/FISCO-BCOS/group-signature-server/tree/dev-2.0) )，初始化环ring1(环成员公/私钥长度默认为1024bits)。
 
