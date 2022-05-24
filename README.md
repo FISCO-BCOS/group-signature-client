@@ -58,15 +58,15 @@ cd group-signature-client
 - port：服务端RPC监听端口，默认是8005
 - thread_num：线程数目，压测场景使用
 
-(2) 配置日志：`dist/conf/log4j.properties`
+(2) 配置日志：`dist/conf/log4j.properties`,`dist/conf/clog.ini`
 
 - 使用默认配置即可
 
 (3) 配置区块链节点信息：`dist/conf/node`
 
-- 将`dist/conf/node`目录下的`application-sample.xml`拷贝成`application.xml`
+- 将`dist/conf/`目录下的`config-sample.toml`拷贝成`config.toml`
 - 将节点的`nodes/127.0.0.1/sdk`目录下的`ca.crt`、`sdk.crt`和`sdk.key`文件拷贝`dist/conf/node`目录下
-- `application.xml`详细配置说明可参考[web3sdk配置](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/sdk/java_sdk.html#spring)
+- `config-sample.toml`详细配置说明可参考配置中注释
 
 ## 使用客户端
 
