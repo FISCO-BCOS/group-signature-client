@@ -7,12 +7,11 @@
 [![All releases](https://img.shields.io/github/release/FISCO-BCOS/group-signature-client.svg)](https://github.com/FISCO-BCOS/group-signature-client/releases/latest)
 ![](https://img.shields.io/github/license/FISCO-BCOS/group-signature-client) 
 
-群/环签名客户端，通过向[服务端](https://github.com/FISCO-BCOS/group-signature-server)发起请求生成签名，并将签名上链，然后调用群/环签名[预编译合约](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/privacy.html#id17)实现签名的链上认证。
-
-群/环签名客户端和服务端是专门提供给社区用户的FISCO BCOS[隐私模块](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/privacy.html)关于群/环签名的开发示例，架构如下：
+群/环签名客户端，通过向[服务端](https://github.com/FISCO-BCOS/group-signature-server)发起请求生成签名，并将签名上链，然后调用[群/环签名预编译合约](https://fisco-bcos-doc.readthedocs.io/zh_CN/latest/docs/develop/precompiled/use_group_ring_sig.html)实现签名的链上认证。关于群/环签名的开发示例，架构如下：
 
 ![](image/demo.jpg)
 
+**注意：当前分支为v3.x版本group-signature-client，仅适配于FISCO BCOS 3.0+; FISCO BCOS 2.0+ 适配版本请手动切换至[master-2.0](https://github.com/FISCO-BCOS/group-signature-client/tree/master-2.0)分支**
 ## 代码结构
 
 | <div align = left>目录</div>  | <div align = left>说明</div>                                 |
@@ -33,7 +32,7 @@
 
 客户端可将群/环签名上链，若要使用链上验证功能，需要部署FISCO BCOS，并开启隐私模块开关。
 
-FISCO BCOS详细搭建步骤，以及隐私模块启用方法可参考[操作文档](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/privacy.html)。
+FISCO BCOS详细搭建步骤可参考[搭建第一个区块链网络](https://fisco-bcos-doc.readthedocs.io/zh_CN/latest/docs/quick_start/air_installation.html)。
 
 ## 编译与配置
 
@@ -58,15 +57,15 @@ cd group-signature-client
 - port：服务端RPC监听端口，默认是8005
 - thread_num：线程数目，压测场景使用
 
-(2) 配置日志：`dist/conf/log4j.properties`
+(2) 配置日志：`dist/conf/log4j.properties`,`dist/conf/clog.ini`
 
 - 使用默认配置即可
 
 (3) 配置区块链节点信息：`dist/conf/node`
 
-- 将`dist/conf/node`目录下的`application-sample.xml`拷贝成`application.xml`
+- 将`dist/conf/`目录下的`config-sample.toml`拷贝成`config.toml`
 - 将节点的`nodes/127.0.0.1/sdk`目录下的`ca.crt`、`sdk.crt`和`sdk.key`文件拷贝`dist/conf/node`目录下
-- `application.xml`详细配置说明可参考[web3sdk配置](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/sdk/java_sdk.html#spring)
+- `config-sample.toml`详细配置说明可参考配置中注释
 
 ## 使用客户端
 

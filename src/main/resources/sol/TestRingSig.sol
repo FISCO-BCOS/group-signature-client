@@ -4,7 +4,7 @@
  *function: test for verifying ring-signature
  */
  
-pragma solidity ^0.4.24;
+pragma solidity ^0.4.25;
 import "./RingSigPrecompiled.sol";
 
 contract TestRingSig{
@@ -23,16 +23,16 @@ contract TestRingSig{
         ring_param_info = _param_info;
     }
 
-    function get_ring_verify_result() constant public returns(bool)
+    function get_ring_verify_result() public view returns(bool)
     {   return ring_verify_result;   }
 
-    function get_ring_sig() constant public returns(string)
+    function get_ring_sig() public view returns(string)
     {   return ring_sig;             }
 
-    function get_ring_param_info() constant public returns(string)
+    function get_ring_param_info() public view returns(string)
     {   return ring_param_info;      }
 
-    function get_ring_message()constant public returns(string)
+    function get_ring_message() public view returns(string)
     {   return ring_message;         }
 
     function update_ring_sig_data(string new_sig, string new_message,
@@ -47,7 +47,8 @@ contract TestRingSig{
     //verify validation of ring-signature
     function verify_ring_sig() public returns(bool)
     {
-        ring_verify_result = rp.ringSigVerify(ring_sig, ring_message, ring_param_info);
+        int code = 0;
+        (code, ring_verify_result) = rp.ringSigVerify(ring_sig, ring_message, ring_param_info);
         return ring_verify_result;
     }
 }

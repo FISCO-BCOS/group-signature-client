@@ -25,19 +25,19 @@ contract TestGroupSig{
         group_pbc_param = _pbc_param_info;
     }
 
-    function get_group_verify_result() constant public returns(bool)
+    function get_group_verify_result() public view returns(bool)
     {  return group_verify_result; }
 
-    function get_group_sig()constant public returns(string)
+    function get_group_sig() public view returns(string)
     {  return group_sig;          }
 
-    function get_group_message()constant public returns(string)
+    function get_group_message() public view returns(string)
     {  return group_message;      }
 
-    function get_group_gpk_info()constant public returns(string)
+    function get_group_gpk_info() public view returns(string)
     {  return group_gpk_info;     }
 
-    function get_group_pbc_param() constant public returns(string)
+    function get_group_pbc_param() public view returns(string)
     {  return group_pbc_param;    }
 
     function update_group_sig_data(string new_sig, string new_message,
@@ -54,7 +54,8 @@ contract TestGroupSig{
     //call verify
     function verify_group_sig() public returns(bool)
     {
-        group_verify_result = gp.groupSigVerify(group_sig, group_message, group_gpk_info, group_pbc_param);
+        int code = 0;
+        (code, group_verify_result) = gp.groupSigVerify(group_sig, group_message, group_gpk_info, group_pbc_param);
         return group_verify_result;
     }
 }

@@ -2,171 +2,84 @@ package org.fisco.bcos.groupsig.contract;
 
 import java.math.BigInteger;
 import java.util.Arrays;
-import org.fisco.bcos.web3j.abi.TypeReference;
-import org.fisco.bcos.web3j.abi.datatypes.Bool;
-import org.fisco.bcos.web3j.abi.datatypes.Function;
-import org.fisco.bcos.web3j.abi.datatypes.Type;
-import org.fisco.bcos.web3j.crypto.Credentials;
-import org.fisco.bcos.web3j.protocol.Web3j;
-import org.fisco.bcos.web3j.protocol.core.RemoteCall;
-import org.fisco.bcos.web3j.tx.Contract;
-import org.fisco.bcos.web3j.tx.TransactionManager;
-import org.fisco.bcos.web3j.tx.gas.ContractGasProvider;
-import org.fisco.bcos.web3j.tx.txdecode.TransactionDecoder;
+import java.util.List;
+import org.fisco.bcos.sdk.v3.client.Client;
+import org.fisco.bcos.sdk.v3.codec.datatypes.Bool;
+import org.fisco.bcos.sdk.v3.codec.datatypes.Function;
+import org.fisco.bcos.sdk.v3.codec.datatypes.Type;
+import org.fisco.bcos.sdk.v3.codec.datatypes.TypeReference;
+import org.fisco.bcos.sdk.v3.codec.datatypes.generated.Int256;
+import org.fisco.bcos.sdk.v3.codec.datatypes.generated.tuples.generated.Tuple2;
+import org.fisco.bcos.sdk.v3.contract.Contract;
+import org.fisco.bcos.sdk.v3.crypto.CryptoSuite;
+import org.fisco.bcos.sdk.v3.crypto.keypair.CryptoKeyPair;
+import org.fisco.bcos.sdk.v3.model.CryptoType;
+import org.fisco.bcos.sdk.v3.transaction.model.exception.ContractException;
 
-/**
- * Auto generated code.
- *
- * <p><strong>Do not modify!</strong>
- *
- * <p>Please use the <a href="https://docs.web3j.io/command_line.html">web3j command line tools</a>,
- * or the org.fisco.bcos.web3j.codegen.SolidityFunctionWrapperGenerator in the <a
- * href="https://github.com/web3j/web3j/tree/master/codegen">codegen module</a> to update.
- *
- * <p>Generated with web3j version none.
- */
 @SuppressWarnings("unchecked")
 public class GroupSigPrecompiled extends Contract {
-    public static String BINARY = "";
+    public static final String[] BINARY_ARRAY = {};
 
-    public static final String ABI =
-            "[{\"constant\":true,\"inputs\":[{\"name\":\"signature\",\"type\":\"string\"},{\"name\":\"message\",\"type\":\"string\"},{\"name\":\"gpkInfo\",\"type\":\"string\"},{\"name\":\"paramInfo\",\"type\":\"string\"}],\"name\":\"groupSigVerify\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}]";
+    public static final String BINARY =
+            org.fisco.bcos.sdk.v3.utils.StringUtils.joinAll("", BINARY_ARRAY);
 
-    public static final TransactionDecoder transactionDecoder = new TransactionDecoder(ABI, BINARY);
+    public static final String[] SM_BINARY_ARRAY = {};
+
+    public static final String SM_BINARY =
+            org.fisco.bcos.sdk.v3.utils.StringUtils.joinAll("", SM_BINARY_ARRAY);
+
+    public static final String[] ABI_ARRAY = {
+        "[{\"constant\":true,\"inputs\":[{\"name\":\"signature\",\"type\":\"string\"},{\"name\":\"message\",\"type\":\"string\"},{\"name\":\"gpkInfo\",\"type\":\"string\"},{\"name\":\"paramInfo\",\"type\":\"string\"}],\"name\":\"groupSigVerify\",\"outputs\":[{\"name\":\"\",\"type\":\"int256\"},{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"selector\":[2999495710,2615796626],\"stateMutability\":\"view\",\"type\":\"function\"}]"
+    };
+
+    public static final String ABI = org.fisco.bcos.sdk.v3.utils.StringUtils.joinAll("", ABI_ARRAY);
 
     public static final String FUNC_GROUPSIGVERIFY = "groupSigVerify";
 
-    @Deprecated
-    protected GroupSigPrecompiled(
-            String contractAddress,
-            Web3j web3j,
-            Credentials credentials,
-            BigInteger gasPrice,
-            BigInteger gasLimit) {
-        super(BINARY, contractAddress, web3j, credentials, gasPrice, gasLimit);
+    protected GroupSigPrecompiled(String contractAddress, Client client, CryptoKeyPair credential) {
+        super(getBinary(client.getCryptoSuite()), contractAddress, client, credential);
     }
 
-    protected GroupSigPrecompiled(
-            String contractAddress,
-            Web3j web3j,
-            Credentials credentials,
-            ContractGasProvider contractGasProvider) {
-        super(BINARY, contractAddress, web3j, credentials, contractGasProvider);
+    public static String getBinary(CryptoSuite cryptoSuite) {
+        return (cryptoSuite.getCryptoTypeConfig() == CryptoType.ECDSA_TYPE ? BINARY : SM_BINARY);
     }
 
-    @Deprecated
-    protected GroupSigPrecompiled(
-            String contractAddress,
-            Web3j web3j,
-            TransactionManager transactionManager,
-            BigInteger gasPrice,
-            BigInteger gasLimit) {
-        super(BINARY, contractAddress, web3j, transactionManager, gasPrice, gasLimit);
+    public static String getABI() {
+        return ABI;
     }
 
-    protected GroupSigPrecompiled(
-            String contractAddress,
-            Web3j web3j,
-            TransactionManager transactionManager,
-            ContractGasProvider contractGasProvider) {
-        super(BINARY, contractAddress, web3j, transactionManager, contractGasProvider);
-    }
-
-    public static TransactionDecoder getTransactionDecoder() {
-        return transactionDecoder;
-    }
-
-    public RemoteCall<Boolean> groupSigVerify(
-            String signature, String message, String gpkInfo, String paramInfo) {
+    public Tuple2<BigInteger, Boolean> groupSigVerify(
+            String signature, String message, String gpkInfo, String paramInfo)
+            throws ContractException {
         final Function function =
                 new Function(
                         FUNC_GROUPSIGVERIFY,
                         Arrays.<Type>asList(
-                                new org.fisco.bcos.web3j.abi.datatypes.Utf8String(signature),
-                                new org.fisco.bcos.web3j.abi.datatypes.Utf8String(message),
-                                new org.fisco.bcos.web3j.abi.datatypes.Utf8String(gpkInfo),
-                                new org.fisco.bcos.web3j.abi.datatypes.Utf8String(paramInfo)),
-                        Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {}));
-        return executeRemoteCallSingleValueReturn(function, Boolean.class);
-    }
-
-    @Deprecated
-    public static GroupSigPrecompiled load(
-            String contractAddress,
-            Web3j web3j,
-            Credentials credentials,
-            BigInteger gasPrice,
-            BigInteger gasLimit) {
-        return new GroupSigPrecompiled(contractAddress, web3j, credentials, gasPrice, gasLimit);
-    }
-
-    @Deprecated
-    public static GroupSigPrecompiled load(
-            String contractAddress,
-            Web3j web3j,
-            TransactionManager transactionManager,
-            BigInteger gasPrice,
-            BigInteger gasLimit) {
-        return new GroupSigPrecompiled(
-                contractAddress, web3j, transactionManager, gasPrice, gasLimit);
+                                new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(signature),
+                                new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(message),
+                                new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(gpkInfo),
+                                new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(paramInfo)),
+                        Arrays.<TypeReference<?>>asList(
+                                new TypeReference<Int256>() {}, new TypeReference<Bool>() {}));
+        List<Type> results = executeCallWithMultipleValueReturn(function);
+        return new Tuple2<BigInteger, Boolean>(
+                (BigInteger) results.get(0).getValue(), (Boolean) results.get(1).getValue());
     }
 
     public static GroupSigPrecompiled load(
-            String contractAddress,
-            Web3j web3j,
-            Credentials credentials,
-            ContractGasProvider contractGasProvider) {
-        return new GroupSigPrecompiled(contractAddress, web3j, credentials, contractGasProvider);
+            String contractAddress, Client client, CryptoKeyPair credential) {
+        return new GroupSigPrecompiled(contractAddress, client, credential);
     }
 
-    public static GroupSigPrecompiled load(
-            String contractAddress,
-            Web3j web3j,
-            TransactionManager transactionManager,
-            ContractGasProvider contractGasProvider) {
-        return new GroupSigPrecompiled(
-                contractAddress, web3j, transactionManager, contractGasProvider);
-    }
-
-    public static RemoteCall<GroupSigPrecompiled> deploy(
-            Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider) {
-        return deployRemoteCall(
-                GroupSigPrecompiled.class, web3j, credentials, contractGasProvider, BINARY, "");
-    }
-
-    @Deprecated
-    public static RemoteCall<GroupSigPrecompiled> deploy(
-            Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
-        return deployRemoteCall(
-                GroupSigPrecompiled.class, web3j, credentials, gasPrice, gasLimit, BINARY, "");
-    }
-
-    public static RemoteCall<GroupSigPrecompiled> deploy(
-            Web3j web3j,
-            TransactionManager transactionManager,
-            ContractGasProvider contractGasProvider) {
-        return deployRemoteCall(
+    public static GroupSigPrecompiled deploy(Client client, CryptoKeyPair credential)
+            throws ContractException {
+        return deploy(
                 GroupSigPrecompiled.class,
-                web3j,
-                transactionManager,
-                contractGasProvider,
-                BINARY,
-                "");
-    }
-
-    @Deprecated
-    public static RemoteCall<GroupSigPrecompiled> deploy(
-            Web3j web3j,
-            TransactionManager transactionManager,
-            BigInteger gasPrice,
-            BigInteger gasLimit) {
-        return deployRemoteCall(
-                GroupSigPrecompiled.class,
-                web3j,
-                transactionManager,
-                gasPrice,
-                gasLimit,
-                BINARY,
-                "");
+                client,
+                credential,
+                getBinary(client.getCryptoSuite()),
+                getABI(),
+                null,
+                null);
     }
 }

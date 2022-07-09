@@ -34,10 +34,13 @@ repositories {
 // In this section you declare the dependencies for your production and test code
 dependencies {
     compile 'org.slf4j:slf4j-log4j12:1.7.25'
-    compile 'org.fisco-bcos:web3sdk:2.6.4'
+    //compile 'org.fisco-bcos:web3sdk:2.6.4'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.8.8.1'
     compile 'com.google.guava:guava:19.0'
-    implementation group: 'com.alibaba', name: 'fastjson', version: '1.2.7'
+    compile 'org.fisco-bcos.java-sdk:fisco-bcos-java-sdk:3.0.0-rc4-SNAPSHOT'
+    compile 'org.apache.httpcomponents:httpclient:4.5.5'
+    compile 'org.apache.httpcomponents:httpcore:4.4.9'
+    compile 'com.alibaba:fastjson:1.2.75'
 }
 
 jar {
