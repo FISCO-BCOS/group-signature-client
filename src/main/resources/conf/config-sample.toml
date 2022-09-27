@@ -4,9 +4,9 @@ certPath = "conf"                           # The certification path
 useSMCrypto = "false"
 
 # The following configurations take the certPath by default if commented
-caCert = "conf/node/ca.crt"                    # CA cert file path
-sslCert = "conf/node/sdk.crt"                  # SSL cert file path
-sslKey = "conf/node/sdk.key"                   # SSL key file path
+# caCert = "conf/ca.crt"                    # CA cert file path
+# sslCert = "conf/sdk.crt"                  # SSL cert file path
+# sslKey = "conf/sdk.key"                   # SSL key file path
 
 # The following configurations take the sm certPath by default if commented
 # caCert = "conf/sm_ca.crt"                    # SM CA cert file path
@@ -15,11 +15,10 @@ sslKey = "conf/node/sdk.key"                   # SSL key file path
 # enSslCert = "conf/sm_ensdk.crt"               # SM encryption cert file path
 # enSslKey = "conf/sm_ensdk.key"                # SM ssl cert file path
 
-#<!-- 每个群组需要配置一个bean，每个群组可以配置多个节点 -->
 [network]
 messageTimeout = "10000"
-defaultGroup = "group1"      #<!-- 群组的groupID -->
-peers=["127.0.0.1:20280"]    # The peer list to connect
+defaultGroup = "group0"
+peers=["127.0.0.1:20200", "127.0.0.1:20201"]    # The peer list to connect
 
 
 [account]

@@ -27,20 +27,23 @@ verifyGoogleJavaFormat {
 
 // In this section you declare where to find the dependencies of your project
 repositories {
-    jcenter()
+    mavenCentral()
+    maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+    maven { url "https://oss.sonatype.org/service/local/staging/deploy/maven2"}
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    maven {url "https://plugins.gradle.org/m2/"}
 }
 
 // In this section you declare the dependencies for your production and test code
 dependencies {
-    compile 'org.slf4j:slf4j-log4j12:1.7.25'
+    compile 'org.slf4j:slf4j-log4j12:1.7.32'
     //compile 'org.fisco-bcos:web3sdk:2.6.4'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.8.1'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.13.2.2'
     compile 'com.google.guava:guava:19.0'
-    compile 'org.fisco-bcos.java-sdk:fisco-bcos-java-sdk:3.0.0-rc4-SNAPSHOT'
+    compile 'org.fisco-bcos.java-sdk:fisco-bcos-java-sdk:3.0.0-SNAPSHOT'
     compile 'org.apache.httpcomponents:httpclient:4.5.5'
     compile 'org.apache.httpcomponents:httpcore:4.4.9'
-    compile 'com.alibaba:fastjson:1.2.75'
+    compile 'com.alibaba:fastjson:2.0.11'
 }
 
 jar {
